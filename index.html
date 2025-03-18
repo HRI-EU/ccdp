@@ -1,0 +1,400 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>CCDP: Composition of Conditional Diffusion Policies with Guided Sampling</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=1000">
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-9YQ4D13KL7"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-9YQ4D13KL7');
+		</script>
+		
+		<!-- please do not copy the google tag, as the 'https://fastumi.com/' did -->
+
+		<meta property="og:url"           content="hri-eu.github.io/CCDP" />
+		<meta property="og:type"          content="website" />
+		<meta property="og:title"         content="CCDP: Composition of Conditional Diffusion Policies with Guided Sampling" />
+		<meta property="og:description"   content="Imitation Learning offers a promising approach in robotics by enabling systems to learn directly from data without requiring explicit models, simulations, or detailed task definitions. During inference, actions are sampled from the learned distribution and executed on the robot. However, sampled actions may fail for various reasons, and simply repeating the sampling step until a successful action is obtained can be inefficient. In this work, we propose an enhanced sampling strategy that refines the sampling distribution to avoid previously unsuccessful actions. We demonstrate that by solely utilizing data from successful demonstrations, our method can infer recovery actions without the need for additional exploratory behavior or a high-level controller. Furthermore, we leverage the concept of diffusion model decomposition to break down the primary problem—which may require long-horizon history to manage failures—into multiple smaller, more manageable sub-problems in learning, data collection, and inference, thereby enabling the system to adapt to variable failure counts. Our approach yields a low-level controller that dynamically adjusts its sampling space to improve efficiency when prior samples fall short. We validate our method across several tasks, including door opening with unknown directions, object manipulation, and button-searching scenarios, demonstrating that our approach outperforms traditional baselines.	" />
+	    <style>
+			.container {
+				display: flex;
+				gap: 10px;
+			}
+			p {
+      		text-align: justify;
+    		}	
+			.column {
+				flex: 1;
+				padding: 10px;
+				background-color: #ffffff;
+				border-radius: 8px;
+			}
+			ul {
+				list-style-type: disc;
+			}
+			img.float-right {
+			float: right;
+			margin: 20px 20px 20px 20px; /* Adds space between image and text */
+			width: 50%; /* Adjust size as needed */
+			border-radius: 8px;
+			}
+			video.float-right {
+			float: right;
+			margin: 20px 20px 20px 20px; /* Adds space between image and text */
+			width: 50%; /* Adjust size as needed */
+			border-radius: 8px;
+			pointer-events: none;
+			}
+
+			.small-list li {
+      font-size: 20px;
+    }
+	.small-text {
+		font-size: 0.6em; /* Makes the text 60% of the header's size */
+	}
+	.highlight {
+			color: #000000; /* Tomato color */
+			}
+	 
+		</style>
+	</head>
+	<body id="top">
+
+		<!-- Main -->
+			<div id="main" style="padding-bottom:1em; padding-top: 5em; width: 60em; max-width: 70em; margin-left: auto; margin-right: auto;">
+					<section id="four">
+						<div class="box alt" style="margin-bottom: 1em;">
+							<div class="row 0% uniform" style="width: 100%; display: flex; justify-content: space-between;">
+								<div class="2u" style="font-size: 0em; line-height: 0em; text-align: center; width: 25%">
+									<span class="image fit" style="margin-bottom: 0.0em;">
+										<img src="images/EPFL_Logo.png" alt=""/>
+									</span>
+								</div>
+								<div class="2u" style="font-size: 0em; line-height: 0em; text-align: center; width: 20%">
+									<span class="image fit" style="margin-bottom: 0.0em;">
+										<img src="images/logo.png" alt=""/>
+									</span>
+								</div>
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 25%">
+									<span class="image fit" style="margin-bottom: 0.0em;">
+										<img src="images/idiap_logo.png" alt=""/>
+									</span>
+								</div>
+							</div>
+						</div>
+
+						<h2 style="text-align: center; white-space: nowrap; color: #4e79a7; font-size: 200%"> CCDP: Composition of Conditional Diffusion Policies <br> with Guided Sampling</h2>
+
+						<!-- <span class="figure" style="margin-top: 0.5em; margin-bottom: 0;">
+							<img src="images/overall.png" width="100%" margin-top="0.5em" alt="" />
+						</span>
+						 -->
+
+						<h3 style="text-align: center; white-space: nowrap; color: #000000; font-size: 150%"> Key Points</h3>
+						<div class="container">
+							<div class="column">
+								<ul>
+									<li>Built on the Diffusion Policy (<a href='https://arxiv.org/pdf/2303.04137'>Chi et al., 2024</a>.)</li>
+									<li>A low-level controller exploits the demonstration set in a more controlled way</li>
+									<li>Achieves failure recovery by avoiding previously failed attempts.</li>
+								</ul>
+							</div>
+							<div class="column">
+								<ul>
+									<li>Requires only successful demonstrations.</li>
+									<li>Does not necessarily require data annotation.</li>
+								</ul>
+							</div>
+						</div>
+						<h2 style="color:#000000"> Abstract</h2>
+						<p class="paper-paragraph" align="justify">
+						Imitation Learning offers a promising approach in robotics by enabling systems to learn directly from data without requiring explicit models, simulations, or detailed task definitions. During inference, actions are sampled from the learned distribution and executed on the robot. However, sampled actions may fail for various reasons, and simply repeating the sampling step until a successful action is obtained can be inefficient. In this work, we propose an enhanced sampling strategy that refines the sampling distribution to avoid previously unsuccessful actions. We demonstrate that by solely utilizing data from successful demonstrations, our method can infer recovery actions without the need for additional exploratory behavior or a high-level controller. Furthermore, we leverage the concept of diffusion model decomposition to break down the primary problem—which may require long-horizon history to manage failures—into multiple smaller, more manageable sub-problems in learning, data collection, and inference, thereby enabling the system to adapt to variable failure counts. Our approach yields a low-level controller that dynamically adjusts its sampling space to improve efficiency when prior samples fall short. We validate our method across several tasks, including door opening with unknown directions, object manipulation, and button-searching scenarios, demonstrating that our approach outperforms traditional baselines.
+
+						<h2 style="color:#000000"> Motivation</h2>
+						<video class="float-right" autoplay loop muted playsinline>
+							<source src="videos/motivation_cropped.mp4" type="video/mp4">
+							Your browser does not support the video tag.
+						  </video>
+						<p>The demonstration set typically includes various ways to perform a task. When a task fails, we want the robot to avoid getting stuck and instead try alternative variations that have not yet failed. Unlike other failure recovery policies, our approach does not require a separate demonstration set with recovery policies or any exploratory behavior that usually demands access to a simulated environment. Instead, it offers a simplified recovery strategy that makes no assumptions about the underlying cause of failure—only that previous attempts were unsuccessful.</p>
+						<p>After training, the model can be integrated with others through the composition of diffusion models. Moreover, when multiple failure cases occur, our method can combine them by selecting samples that avoid all failed actions. Composing models to learn the recovery policy enables us to develop a single, versatile model capable of handling arbitrary sequences of failures while reducing dimensionality and facilitating learning.</p>
+
+						
+						<h2 style="color:#000000">Offline Phase</h2>
+						<div class="2u" style="font-size: 0em; line-height: 0em; text-align: center; width: 100%">
+							<span class="image fit" style="margin-bottom: 0.0em;">
+								<img src="images/offline_phase.gif" alt=""/>
+							</span>
+						</div>
+						During the Offline Phase, the process unfolds as follows:
+						<ol>
+							<li><strong style="color:#000000"> Action Samplers: </strong> We first train multiple samplers to generate actions from various distributions: an unconditional action sampler, a state-conditioned action sampler, and a history-conditioned action sampler.
+							</li>
+							<li><strong style="color:#000000"> Sampling Actions: </strong> We traverse the observed states in the demonstration set and sample a set of actions by combining the unconditional and state-dependent samplers. Excluding history at this stage enables exploration of a broader range of possibilities.
+							</li>
+							<li><strong style="color:#000000"> Identifying Recovery Candidates: </strong> For states that are sufficiently similar, we compute their pairwise distances in a predefined space. If the distance exceeds a specified threshold, these states are considered as potential recoveries for each other.
+							</li>
+							<li><strong style="color:#000000"> Learning the Avoidance-Conditioned Sampler: </strong> Finally, we use the new dataset to train an avoidance-conditioned action sampler.
+							</li>
+
+						</ol>
+						The difference of each sampler can be described better as following:<br>
+
+						<div class="box alt" style="margin-bottom: 1em;">
+							<div class="row 0% uniform" style="width: 100%; display: flex; justify-content: space-between;">
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 20%">
+									<span class="image fit" style="margin-bottom: 0.5em;">
+										<img src="images/p(a).png" alt=/>
+									</span>
+									Unconditional
+								</div>
+								<div class="2u" style="font-size: 1em; line-height: 1em; text-align: center; width: 20%">
+									<span class="image fit" style="margin-bottom: .5em;">
+										<img src="images/p(a_s).png" alt=""/>
+									</span>
+									State-Conditioned
+								</div>
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 20%">
+									<span class="image fit" style="margin-bottom: 0.5em;">
+										<img src="images/p(a_h).png" alt=""/>
+									</span>
+									History-Conditioned
+								</div>
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 20%">
+									<span class="image fit" style="margin-bottom: 0.5em;">
+										<img src="images/p(a_z).png" alt=""/>
+									</span>
+									Failure-Conditioned
+								</div>
+							</div>
+						</div>
+
+						<div class="box alt" style="margin-bottom: 1em;">
+							<div class="row 0% uniform" style="width: 100%; display: flex; justify-content: space-between;">
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 20%;margin-left: auto;">
+									<span class="image fit" style="margin-bottom: 0.5em;">
+										<img src="images/Legend.png" alt=/>
+									</span>
+								</div>
+								<div class="2u" style="font-size: 1em; line-height: 1em; text-align: center; width: 20%; margin-right: auto;">
+									<span class="image fit" style="margin-bottom: .5em;">
+										<img src="images/Combined.png" alt=""/>
+									</span>
+									Combined
+								</div>
+
+							</div>
+						</div>
+
+						<h2 style="color:#000000">Online Phase</h2>
+						<div class="container">
+							<div class="column">
+								<ul>
+									<li>We unify all models using the approach described by <a href="https://arxiv.org/pdf/2206.01714" target="_blank">Liu et al. (2022)</a>.</li>
+									<li>The combination is managed by adjusting the weights of each model based on their specific purpose.</li>
+									<li>The combined model leverages the Failure-Conditioned model depending on the number of failed attempts.</li>
+								</ul>
+							</div>
+							<div class="column">
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 100%">
+									<span class="image fit" style="margin-bottom: 0em;">
+										<video autoplay loop muted playsinline style="width: 100%; margin-right: 5%;"><source src="videos/online_cropped.mp4" type="video/mp4"> </video>
+									</span>
+								</div>
+							</div>
+						</div>
+						
+						
+						
+						<h2 style="color:#000000">Experiments</h2>
+						<div class="container">
+							<div class="column">
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 100%">
+									<span class="image fit" style="margin-bottom: 0em;">
+										<video autoplay loop muted playsinline style="width: 100%; margin-right: 5%;"><source src="videos/DO.mp4" type="video/mp4"> </video>
+									</span>
+									<span class='highlight'>Door Opening (DO)</span>
+								</div>
+								<br>
+								<ul class="small-list">
+									<li>The robot is unaware of the door's opening direction.</li>
+									<li>It tests various approaches, avoiding previously failed attempts until success.</li>
+									<li>A single, unified policy—without a higher-level controller—enables the door to be opened, whether by pulling, moving up, or sliding to the side.
+									</li>
+								</ul>
+							</div>
+
+							<div class="column">
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 100%">
+									<span class="image fit" style="margin-bottom: 0em;">
+										<video autoplay loop muted playsinline style="width: 100%; margin-right: 5%;"><source src="videos/BP.mp4" type="video/mp4"> </video>
+									</span>
+									<span class='highlight'> Buttom Pressing (BP)</span>
+								</div>
+								<br>
+								<ul class="small-list">
+									<li>The robot lacks knowledge of the button's location. </li>
+								</ul>
+							</div>
+
+							<div class="column">
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 100%">
+									<span class="image fit" style="margin-bottom: 0em;">
+										<video autoplay loop muted playsinline style="width: 100%; margin-right: 5%;"><source src="videos/OM.mp4" type="video/mp4"> </video>
+									</span>
+									<span class="highlight">Object Manipulation (OM)</span>
+								</div>
+								<br>
+								<ul class="small-list">
+									<li>The object's mass is hidden from the robot.</li>
+									<li>Heavier objects render some manipulation primitives ineffective.</li>
+									<li>The robot compensates by executing less optimal actions to move the object.</li>
+									<li>A single policy controls both robots and selects actions without a bi-level planner. </li>
+								</ul>
+							</div>
+						</div>
+
+
+						
+
+						<div class="container">
+							<div class="2u" style="font-size: 0em; line-height: 0em; text-align: center; width: 70%;margin-left:auto; margin-right:auto;">
+								<span class="image fit" style="margin-bottom: 0.0em;">
+									<img src="images/OP.gif" alt=""/>
+								</span>
+							</div>
+						</div>
+						<h2 style="text-align: center; white-space: nowrap; color:#000000;font-size : 100%">Object Packing (OP) <span class='small-text'>[The video is 6x speed]</span> </h2>
+						
+						<h2 style="color:#000000">Results</h2>
+						<div class="box alt" style="margin-bottom: 1em;">
+							<div class="row 0% uniform" style="width: 100%; display: flex; justify-content: space-between;">
+								<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 50%;margin-left: auto;">
+									<span class="image fit" style="margin-bottom: 0.5em;">
+										<img src="images/success_rate.png" alt=/>
+									</span>
+								</div>
+								<div class="2u" style="font-size: 1em; line-height: 1em; text-align: center; width: 50%; margin-right: auto;">
+									<span class="image fit" style="margin-bottom: .5em;">
+										<img src="images/implicit_objective.png" alt=""/>
+									</span>
+								</div>
+
+							</div>
+						</div>
+						
+						<hr>
+						<h3 style="color:#000000"><a id="paper">Paper</a></h3>
+						<p>
+						<a href="?">?</a>.<br>
+						CCDP: Composition of Conditional Diffusion Policies with Guided Sampling<br>
+						Amirreza Razmjoo, Sylvain Calinon, Michael Gienger, Fan Zhang<br>
+						</p>
+						
+						
+						<hr style="margin-top: 0em;">
+						<h3>Team</h3>
+						<section>
+							<div class="box alt" style="margin-bottom: 0em;">
+								<div class="row 50% uniform" style="width: 100%;">
+									<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 16%">
+										<a href="https://amirrazmjoo.github.io/">
+											<span class="image fit" style="margin-bottom: 0.5em;">
+												<img src="images/amir.JPG" alt="" style="border-radius: 50%;" />
+											</span>Amirreza Razmjoo
+										</a>
+									</div>
+									<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 16%">
+										<a href="https://www.calinon.ch/">
+											<span class="image fit" style="margin-bottom: 0.5em;">
+												<img src="images/SylvainCalinon.jpg" alt="" style="border-radius: 50%;" />
+											</span>Sylvain Calinon
+										</a>
+									</div>
+									<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 16%">
+										<a href="https://www.honda-ri.de/">
+											<span class="image fit" style="margin-bottom: 0.5em;">
+												<img src="images/michael.png" alt="" style="border-radius: 50%;" />
+											</span>Michael Gienger
+										</a>
+									</div>
+									<div class="2u" style="font-size: 1em; line-height: 1.5em; text-align: center; width: 16%">
+										<a href="https://fan6zh.github.io/">
+											<span class="image fit" style="margin-bottom: 0.5em;">
+												<img src="images/fan.jpg" alt="" style="border-radius: 50%;" />
+											</span>Fan Zhang 
+										</a>
+									</div>
+
+								</div>
+							</div>
+						</section>
+						
+						<hr style="margin-top: 0em;">
+						<section>
+		      This webpage template was recycled from <a href='https://diffusion-policy.cs.columbia.edu/'>here</a>.
+						</section>
+
+
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="0" width="0" style="position: absolute;">
+				<defs>
+					<!-- Go-up -->
+					<g id="go-up">
+						<path d="M10,9V5L3,12L10,19V14.9C15,14.9 18.5,16.5 21,20C20,15 17,10 10,9Z" fill="#696969"/>
+					</g>
+					<!-- Folder -->
+					<g id="folder" fill-rule="nonzero" fill="none">
+						<path d="M285.22 37.55h-142.6L110.9 0H31.7C14.25 0 0 16.9 0 37.55v75.1h316.92V75.1c0-20.65-14.26-37.55-31.7-37.55z" fill="#FFA000"/>
+						<path d="M285.22 36H31.7C14.25 36 0 50.28 0 67.74v158.7c0 17.47 14.26 31.75 31.7 31.75H285.2c17.44 0 31.7-14.3 31.7-31.75V67.75c0-17.47-14.26-31.75-31.7-31.75z" fill="#FFCA28"/>
+					</g>
+					<g id="folder-shortcut" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+						<g id="folder-shortcut-group" fill-rule="nonzero">
+							<g id="folder-shortcut-shape">
+								<path d="M285.224876,37.5486902 L142.612438,37.5486902 L110.920785,0 L31.6916529,0 C14.2612438,0 0,16.8969106 0,37.5486902 L0,112.646071 L316.916529,112.646071 L316.916529,75.0973805 C316.916529,54.4456008 302.655285,37.5486902 285.224876,37.5486902 Z" id="Shape" fill="#FFA000"></path>
+								<path d="M285.224876,36 L31.6916529,36 C14.2612438,36 0,50.2838568 0,67.7419039 L0,226.451424 C0,243.909471 14.2612438,258.193328 31.6916529,258.193328 L285.224876,258.193328 C302.655285,258.193328 316.916529,243.909471 316.916529,226.451424 L316.916529,67.7419039 C316.916529,50.2838568 302.655285,36 285.224876,36 Z" id="Shape" fill="#FFCA28"></path>
+							</g>
+							<path d="M126.154134,250.559184 C126.850974,251.883673 127.300549,253.006122 127.772602,254.106122 C128.469442,255.206122 128.919016,256.104082 129.638335,257.002041 C130.559962,258.326531 131.728855,259 133.100057,259 C134.493737,259 135.415364,258.55102 136.112204,257.67551 C136.809044,257.002041 137.258619,255.902041 137.258619,254.577551 C137.258619,253.904082 137.258619,252.804082 137.033832,251.457143 C136.786566,249.908163 136.561779,249.032653 136.561779,248.583673 C136.089726,242.814286 135.864939,237.920408 135.864939,233.273469 C135.864939,225.057143 136.786566,217.514286 138.180246,210.846939 C139.798713,204.202041 141.889234,198.634694 144.429328,193.763265 C147.216689,188.869388 150.678411,184.873469 154.836973,181.326531 C158.995535,177.779592 163.626149,174.883673 168.481552,172.661224 C173.336954,170.438776 179.113983,168.665306 185.587852,167.340816 C192.061722,166.218367 198.760378,165.342857 205.481514,164.669388 C212.18017,164.220408 219.598146,163.995918 228.162535,163.995918 L246.055591,163.995918 L246.055591,195.514286 C246.055591,197.736735 246.752431,199.510204 248.370899,201.059184 C250.214153,202.608163 252.079886,203.506122 254.372715,203.506122 C256.463236,203.506122 258.531277,202.608163 260.172223,201.059184 L326.102289,137.797959 C327.720757,136.24898 328.642384,134.47551 328.642384,132.253061 C328.642384,130.030612 327.720757,128.257143 326.102289,126.708163 L260.172223,63.4469388 C258.553756,61.8979592 256.463236,61 254.395194,61 C252.079886,61 250.236632,61.8979592 248.393377,63.4469388 C246.77491,64.9959184 246.07807,66.7693878 246.07807,68.9918367 L246.07807,100.510204 L228.162535,100.510204 C166.863084,100.510204 129.166282,117.167347 115.274437,150.459184 C110.666301,161.54898 108.350993,175.310204 108.350993,191.742857 C108.350993,205.279592 113.903236,223.912245 124.760454,247.438776 C125.00772,248.112245 125.457294,249.010204 126.154134,250.559184 Z" id="Shape" fill="#FFFFFF" transform="translate(218.496689, 160.000000) scale(-1, 1) translate(-218.496689, -160.000000) "></path>
+						</g>
+					</g>
+					<!-- File -->
+					<g id="file" stroke="#000" stroke-width="25" fill="#FFF" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M13 24.12v274.76c0 6.16 5.87 11.12 13.17 11.12H239c7.3 0 13.17-4.96 13.17-11.12V136.15S132.6 13 128.37 13H26.17C18.87 13 13 17.96 13 24.12z"/>
+						<path d="M129.37 13L129 113.9c0 10.58 7.26 19.1 16.27 19.1H249L129.37 13z"/>
+					</g>
+					<g id="file-shortcut" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+						<g id="file-shortcut-group" transform="translate(13.000000, 13.000000)">
+							<g id="file-shortcut-shape" stroke="#000000" stroke-width="25" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M0,11.1214886 L0,285.878477 C0,292.039924 5.87498876,296.999983 13.1728373,296.999983 L225.997983,296.999983 C233.295974,296.999983 239.17082,292.039942 239.17082,285.878477 L239.17082,123.145388 C239.17082,123.145388 119.58541,2.84217094e-14 115.369423,2.84217094e-14 L13.1728576,2.84217094e-14 C5.87500907,-1.71479982e-05 0,4.96022995 0,11.1214886 Z" id="rect1171"></path>
+								<path d="M116.37005,0 L116,100.904964 C116,111.483663 123.258008,120 132.273377,120 L236,120 L116.37005,0 L116.37005,0 Z" id="rect1794"></path>
+							</g>
+							<path d="M47.803141,294.093878 C48.4999811,295.177551 48.9495553,296.095918 49.4216083,296.995918 C50.1184484,297.895918 50.5680227,298.630612 51.2873415,299.365306 C52.2089688,300.44898 53.3778619,301 54.7490634,301 C56.1427436,301 57.0643709,300.632653 57.761211,299.916327 C58.4580511,299.365306 58.9076254,298.465306 58.9076254,297.381633 C58.9076254,296.830612 58.9076254,295.930612 58.6828382,294.828571 C58.4355724,293.561224 58.2107852,292.844898 58.2107852,292.477551 C57.7387323,287.757143 57.5139451,283.753061 57.5139451,279.95102 C57.5139451,273.228571 58.4355724,267.057143 59.8292526,261.602041 C61.44772,256.165306 63.5382403,251.610204 66.0783349,247.62449 C68.8656954,243.620408 72.3274172,240.35102 76.4859792,237.44898 C80.6445412,234.546939 85.2751561,232.177551 90.1305582,230.359184 C94.9859603,228.540816 100.76299,227.089796 107.236859,226.006122 C113.710728,225.087755 120.409385,224.371429 127.13052,223.820408 C133.829177,223.453061 141.247152,223.269388 149.811542,223.269388 L167.704598,223.269388 L167.704598,249.057143 C167.704598,250.87551 168.401438,252.326531 170.019905,253.593878 C171.86316,254.861224 173.728893,255.595918 176.021722,255.595918 C178.112242,255.595918 180.180284,254.861224 181.82123,253.593878 L247.751296,201.834694 C249.369763,200.567347 250.291391,199.116327 250.291391,197.297959 C250.291391,195.479592 249.369763,194.028571 247.751296,192.761224 L181.82123,141.002041 C180.202763,139.734694 178.112242,139 176.044201,139 C173.728893,139 171.885639,139.734694 170.042384,141.002041 C168.423917,142.269388 167.727077,143.720408 167.727077,145.538776 L167.727077,171.326531 L149.811542,171.326531 C88.5120908,171.326531 50.8152886,184.955102 36.9234437,212.193878 C32.3153075,221.267347 30,232.526531 30,245.971429 C30,257.046939 35.5522422,272.291837 46.4094607,291.540816 C46.6567266,292.091837 47.1063009,292.826531 47.803141,294.093878 Z" id="Shape-Copy" fill="#000000" fill-rule="nonzero" transform="translate(140.145695, 220.000000) scale(-1, 1) translate(-140.145695, -220.000000) "></path>
+						</g>
+					</g>
+				</defs>
+			</svg>
+
+		<!-- Footer -->
+			<!-- <footer id="footer">
+				<div class="inner">
+					<ul class="copyright">
+						<li>Meet <a href="https://en.wikipedia.org/wiki/Danbo_(character)">Danbo</a> the cardboard robot.</li>
+					</ul>
+				</div>
+			</footer> -->
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.poptrox.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+	</body>
+</html>
