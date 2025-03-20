@@ -1,4 +1,6 @@
-# 🦾🤖<span style="display: inline-block; transform: scaleX(-1);">🦾</span> CCDP: Composition of Conditional Diffusion Policies with Guided Sampling
+# 🦾🤖<svg style="display: inline-block; transform: scaleX(-1);" width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+  <text x="0" y="15" font-size="20">🦾</text>
+</svg> CCDP: Composition of Conditional Diffusion Policies with Guided Sampling
 
 <p align="center">
   <video src="videos/DO.mp4" width="30%" autoplay loop muted></video>
