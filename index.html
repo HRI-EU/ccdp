@@ -28,6 +28,14 @@
 				display: flex;
 				gap: 10px;
 			}
+			.container_links {
+				display: flex;
+				gap: 0px;
+				display: flex;
+            justify-content: center;
+            align-items: center;
+
+			}
 			p {
       		text-align: justify;
     		}	
@@ -63,7 +71,24 @@
 	.highlight {
 			color: #000000; /* Tomato color */
 			}
-	 
+		.links {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+        }
+        .links a {
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background: #3bd49a;
+            color: white;
+            font-weight: bold;
+        }
+        .links a:hover {
+            background: hsl(0, 0%, 100%);
+        }
 		</style>
 	</head>
 	<body id="top">
@@ -73,7 +98,7 @@
 					<section id="four">
 						<div class="box alt" style="margin-bottom: 1em;">
 							<div class="row 0% uniform" style="width: 100%; display: flex; justify-content: space-between;">
-								<div class="2u" style="font-size: 0em; line-height: 0em; text-align: center; width: 25%">
+								<div class="2u" style="font-size: 0em; line-height: 0em; text-align: center; width: 20%">
 									<span class="image fit" style="margin-bottom: 0.0em;">
 										<img src="images/EPFL_Logo.png" alt=""/>
 									</span>
@@ -97,7 +122,13 @@
 							<img src="images/overall.png" width="100%" margin-top="0.5em" alt="" />
 						</span>
 						 -->
-
+						 <div class="container_links">
+							<div class="links">
+								<a href="https://arxiv.org/abs/2503.15386" target="_blank">📄 Paper</a>
+								<a href="https://github.com/HRI-EU/ccdp" target="_blank">💻 Code (Comming Soon)</a>
+							</div>
+						 </div>
+					
 						<h3 style="text-align: center; white-space: nowrap; color: #000000; font-size: 150%"> Key Points</h3>
 						<div class="container">
 							<div class="column">
@@ -293,7 +324,7 @@
 						<hr>
 						<h3 style="color:#000000"><a id="paper">Paper</a></h3>
 						<p>
-						<a href="?">?</a>.<br>
+						<a href="https://arxiv.org/abs/2503.15386">https://arxiv.org/abs/2503.15386</a>.<br>
 						CCDP: Composition of Conditional Diffusion Policies with Guided Sampling<br>
 						Amirreza Razmjoo, Sylvain Calinon, Michael Gienger, Fan Zhang<br>
 						</p>
