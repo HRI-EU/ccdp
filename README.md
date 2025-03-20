@@ -1,4 +1,4 @@
-# 🦾🤖<p style="display: inline-block; transform: scaleX(-1);"> 🦾</p> CCDP: Composition of Conditional Diffusion Policies with Guided Sampling
+# 🦾🤖<span style="display: inline-block; transform: scaleX(-1);">🦾</span> CCDP: Composition of Conditional Diffusion Policies with Guided Sampling
 
 <p align="center">
   <video src="videos/DO.mp4" width="30%" autoplay loop muted></video>
@@ -11,7 +11,7 @@
 <!--[![Code Style](https://img.shields.io/badge/code_style-black-black?style=flat-square)](https://github.com/psf/black)-->
 
 <!-- * Paper page: Affordance-based Robot Manipulation with Flow Matching https://arxiv.org/abs/2409.01083 -->
-* Project page: https://hri-eu.github.io/CCDP/
+* Project page: https://hri-eu.github.io/ccdp/
 <!-- * Code: https://github.com/HRI-EU/flow_matching -->
 * Author: Amirreza Razmjoo (amirreza.razmjoofard@epfl.ch), Sylvain Calinon, Michael Gienger, Fan Zhang
 <!--* <video src="https://github.com/user-attachments/assets/633d6756-a3ff-4fde-aace-bbf5fbd58866" width="300" autoplay loop muted>-->
