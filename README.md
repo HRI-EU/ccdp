@@ -1,18 +1,55 @@
-# 🦾🤖 <img src="images/flipped_emoji.svg" alt="flipped emoji" width="1em" height="1em" /> CCDP: Composition of Conditional Diffusion Policies with Guided Sampling
+# CCDP
 
-<p align="center">
-  <video src="videos/DO.mp4" width="30%" autoplay loop muted></video>
-  <video src="videos/BP.mp4" width="30%" autoplay loop muted></video>
-  <video src="videos/OM.mp4" width="30%" autoplay loop muted></video>
-</p>
+# CCDP Internal Repository  
 
-<!-- [![Static Badge](https://img.shields.io/badge/arXiv-2409.01083-B31B1B?style=flat-square&logo=arxiv)](https://arxiv.org/abs/2409.01083) -->
-[![License](https://img.shields.io/pypi/l/cobras?style=flat-square)](https://opensource.org/license/bsd-3-clause)
-<!--[![Code Style](https://img.shields.io/badge/code_style-black-black?style=flat-square)](https://github.com/psf/black)-->
+This repository contains the codebase for the paper **[CCDP](https://hri-eu.github.io/ccdp/)**. The code was developed by the CCDP team during [A. Razmjoo](https://amirrazmjoo.github.io/)'s internship at HRI (Oct. 2024 – Mar. 2025).  
 
-<!-- * Paper page: Affordance-based Robot Manipulation with Flow Matching https://arxiv.org/abs/2409.01083 -->
-* Project page: https://hri-eu.github.io/ccdp/
-<!-- * Code: https://github.com/HRI-EU/flow_matching -->
-* Author: Amirreza Razmjoo (amirreza.razmjoofard@epfl.ch), Sylvain Calinon, Michael Gienger, Fan Zhang
-<!--* <video src="https://github.com/user-attachments/assets/633d6756-a3ff-4fde-aace-bbf5fbd58866" width="300" autoplay loop muted>-->
+If you encounter any issues or need clarification, please contact A. Razmjoo directly or reach out to other team members.  
 
+## Repository Structure  
+
+This repository is organized around the cleaned door-manipulation pipeline and the assets it depends on.  
+
+- **Main Codes/**: Cleaned and structured door pipeline used for the paper results.  
+  - `door_cleaned.ipynb`: Jupyter notebook version of the door example.  
+  - `door_pipeline_clean.py`: Scripted pipeline with a `main()` entrypoint for data generation, training, and sampling.  
+  - `door_config.py`: Centralized configuration, paths, and defaults.  
+  - `door_models.py`: Model blocks, datasets, and diffusion helpers.  
+- **models/**: Pretrained checkpoints and cached datasets (`*.pth`, `*.pkl`, `*.pt`).  
+- **xml/**: Mujoco environment definitions and mesh assets used by the door task.  
+- `ccdp.yml`: Conda environment specification.  
+- `requirements.txt`: Pip dependencies if you are not using conda.  
+
+## Usage  
+
+To use this repository, follow these steps:  
+
+1. Install the required dependencies:  
+   ```bash
+   conda env create -f ccdp.yml
+   ```
+   Or, with pip:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. **Run the notebook:**
+   - Notebook:
+     ```bash
+     jupyter notebook "Main Codes/door_cleaned.ipynb"
+     ```
+   
+The scripted pipeline caches generated demos and checkpoints under `models/` by default.  
+
+## Citation
+
+If you find this work useful, please cite:
+
+```bibtex
+@inproceedings{Razmjoo25IROS,
+	author={Razmjoo, A. and Calinon, S. and Gienger, M. and Zhang, F.},
+	title={{CCDP}: Composition of Conditional Diffusion Policies with Guided Sampling},
+	booktitle={Proc.\ {IEEE/RSJ} Intl Conf.\ on Intelligent Robots and Systems ({IROS})},
+	pages={20036--20043},
+	year={2025}
+}
+```

@@ -1,0 +1,50 @@
+<mujoco model="box cabinet">
+<!-- =================================================
+    Copyright 2019 Vikash Kumar
+    Model   :: boxcabinet (MuJoCoV2.0)
+    Author  :: Vikash Kumar (vikashplus@gmail.com)
+    Details :: https://github.com/vikashplus/furniture_sim
+    License :: Under Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+====================================================== -©vk©-->
+    <compiler angle="radian" meshdir="assets" autolimits="true"/>
+    <option cone="elliptic" impratio="100"/> 
+    <include file="./Hand/2f85_modified_multi.xml"/>    
+    <!--<include file="/hri/localdisk/Amir/Git/mujoco_menagerie/robotiq_2f85/2f85_modified.xml"/>-->
+    <include file="./boxcabinet/boxcabinet_assets.xml"/>
+    <visual>
+	    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+	    <rgba haze="0.15 0.25 0.35 1"/>
+	    <global azimuth="120" elevation="-20"/>
+  </visual>
+  
+   <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.0"/>
+  </asset>
+  
+  
+    <worldbody>
+	<light pos="0 0 15" dir="0 0 -1" directional="true"/>
+        <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+        <body name = "cabinet" pos="0.8 -0.25 .6" quat="0 1 1 0">
+            <include file="./boxcabinet/boxcabinet_body.xml"/>
+        </body>
+        <body name="end_point" pos="0 0 0">
+        	<geom type="sphere" size = "0.01" rgba="1 0 0 1"/>
+        </body>
+	<camera name="closeup_xyz" pos="-0.8 -1.2 1" xyaxes="1 -1 0 0 1 2"/>
+	<camera name="closeup_xz" pos="0.5 -1.2 0.5" xyaxes="1 0 0 0 0 1"/>
+	<camera name="closeup_xy" pos="0.5 0 2" xyaxes="1 0 0 0 1 0"/>
+	
+<!--     <body name="marker">
+        <geom type="sphere" size="0.01" rgba="1 0 0 1"/>
+    </body> -->
+    </worldbody>
+
+
+    <keyframe>
+       <key name="home" qpos="0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0." ctrl="0. 0. 0. 0. 255 0. 0. 0. 0. 255 0. 0. 0. 0. 255"/>
+    </keyframe>
+</mujoco>
