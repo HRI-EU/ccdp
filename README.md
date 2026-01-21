@@ -38,7 +38,7 @@ To use this repository, follow these steps:
      jupyter notebook "Main Codes/door_cleaned.ipynb"
      ```
    
-The scripted pipeline caches generated demos and checkpoints under `models/` by default.  
+The scripted pipeline caches generated demos and [checkpoints](https://drive.google.com/drive/folders/16VVNrU1PpgfjNibktpdD_tzZzdsSbSYn?usp=sharing).  
 
 ## Citation
 
