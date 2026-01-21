@@ -20,6 +20,12 @@ This repository is organized around the cleaned door-manipulation pipeline and t
 - `ccdp.yml`: Conda environment specification.  
 - `requirements.txt`: Pip dependencies if you are not using conda.  
 
+
+## Third-Party Assets
+
+This repository includes third-party MuJoCo models and assets. See `THIRD_PARTY_NOTICES.md` for required attributions and license texts.
+
+
 ## Usage  
 
 To use this repository, follow these steps:  
