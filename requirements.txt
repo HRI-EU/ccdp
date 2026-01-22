@@ -14,6 +14,7 @@ executing==2.2.1
 filelock==3.16.1
 fonttools==4.57.0
 fsspec==2025.3.0
+gdown==5.2.0
 glfw==2.10.0
 hf-xet==1.2.0
 huggingface-hub==0.36.0

@@ -38,13 +38,17 @@ To use this repository, follow these steps:
    ```bash
    pip install -r requirements.txt
    ```
-2. **Run the notebook:**
+2. Download the pretrained models and cached demos (required for the demos and to reproduce results):
+   ```bash
+   python download_models.py
+   ```
+3. **Run the notebook:**
    - Notebook:
      ```bash
      jupyter notebook "Main Codes/door_cleaned.ipynb"
      ```
    
-The scripted pipeline caches generated demos and [checkpoints](https://drive.google.com/drive/folders/16VVNrU1PpgfjNibktpdD_tzZzdsSbSYn?usp=sharing).  
+The scripted pipeline caches generated demos and checkpoints in `models/`.  
 
 ## Citation
 
